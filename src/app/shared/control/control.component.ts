@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, inject, input, Input, signal, ViewEncapsulation } from '@angular/core';
+import { afterNextRender, afterRender, Component, contentChild, ContentChild, ElementRef, HostBinding, inject, input, Input, signal, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-control',
@@ -19,9 +19,25 @@ export class ControlComponent {
 
   private el = inject(ElementRef); // prgrammatically access the host element
 
+  //         #input is a template variable used wherever this component is used
+  // @ContentChild('input') private control?: ElementRef<HTMLInputElement> | ElementRef<HTMLTextAreaElement>;
+  private control = contentChild<ElementRef<HTMLInputElement | HTMLTextAreaElement>>('input');
+
+  constructor() {
+    // they in the entire application context, not just in this component
+    afterRender(() => {
+      console.log("After render:", this.el.nativeElement); // loggs after every render cycle in the whole app
+    });
+
+    afterNextRender(() => {
+      console.log("After next render:", this.el.nativeElement); // loggs only once after the first render cycle in the whole app
+    });
+  }
+
   // listner for click events on host element
   onClick() {
     console.log('Control clicked:', this.el);
 
+    console.log('Control content:', this.control());
   }
 }
