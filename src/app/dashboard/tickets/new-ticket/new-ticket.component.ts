@@ -14,6 +14,9 @@ export class NewTicketComponent implements OnInit, AfterViewInit {
   @ViewChild('form') private form?: ElementRef<HTMLFormElement>
   // private form = viewChild.required<ElementRef<HTMLFormElement>>('form'); // the signal way
 
+  enteredTitle = '';
+  enteredText = '';
+
   // @Output() add = new EventEmitter();
   add = output<{title: string, text: string}>();
 
@@ -26,15 +29,17 @@ export class NewTicketComponent implements OnInit, AfterViewInit {
   //   // console.log('On INIT', this.form()); // here the form is defined, if it is declared with viewChild signal
   }
 
-  onSubmit(title: string, desc: string) {
+  onSubmit() { // onSubmit(title: string, desc: string)
     // console.dir(titleEl);
 
     // const enteredTitle = title;
     // const enteredDesc = desc;
     // console.log('New ticket title:', enteredTitle);
 
-    this.add.emit({ title: title, text: desc });
+    this.add.emit({ title: this.enteredTitle, text: this.enteredText });
 
-    this.form?.nativeElement.reset();
+    this.enteredTitle = '';
+    this.enteredText = '';
+    // this.form?.nativeElement.reset();
   }
 }
